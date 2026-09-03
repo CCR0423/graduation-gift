@@ -1,0 +1,113 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#0a0a0a">
+  <title>丁金天 · 毕业留念</title>
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <meta name="description" content="金兰同路，共赴长天。">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="毕业留念">
+  <meta property="og:title" content="丁金天 · 毕业留念">
+  <meta property="og:description" content="金兰同路，共赴长天。">
+  <meta property="og:image" content="https://CCR0423.github.io/graduation-gift/assets/photos/dingjintian.jpg">
+  <meta property="og:url" content="https://CCR0423.github.io/graduation-gift/dingjintian.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="assets/style.css?v=11">
+</head>
+<body>
+
+  <!-- 回纹暗纹 -->
+  <div class="pattern-bg"></div>
+
+  <!-- 金色粒子背景 -->
+  <canvas id="gold-particles"></canvas>
+
+  <!-- ============ 封面仪式感 ============ -->
+  <div class="cover" id="cover">
+    <div class="cover__card">
+      <div class="cover__nfc">
+        <div class="cover__ripple"></div>
+        <div class="cover__ripple"></div>
+        <div class="cover__ripple"></div>
+        <div class="cover__nfc-icon"></div>
+      </div>
+    </div>
+    <div class="cover__name">丁金天</div>
+    <div class="cover__hint">轻 触 开 启</div>
+  </div>
+
+  <!-- ============ 主页面 ============ -->
+  <div class="main">
+
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero__crest">
+        <img src="assets/crest.png" alt="河北地质大学校徽">
+      </div>
+      <div class="hero__college-logo">
+        <img src="assets/college.png" alt="河北地质大学信息工程学院">
+      </div>
+
+      <h1 class="hero__name calligraphy"><span class="hero__to">To:</span>丁金天</h1>
+
+      <div class="hero__blessing calligraphy">金兰同路，共赴长天。</div>
+
+      <div class="hero__scroll">向下滚动</div>
+    </section>
+
+    <!-- 四载同行 -->
+    <section class="timeline">
+      <p class="timeline__label">— 四 载 同 行 —</p>
+
+      <div class="timeline__track">
+        <span class="timeline__year">2022.09</span>
+        <span class="timeline__dots">
+          <span class="timeline__dot timeline__dot--start"></span>
+          <span class="timeline__dot timeline__dot--end"></span>
+        </span>
+        <span class="timeline__year">2026.06</span>
+      </div>
+    </section>
+
+    <!-- 一句寄语 -->
+    <section class="memory">
+      <p class="memory__label">— 一 句 寄 语 —</p>
+
+      <div class="memory__photo-frame memory__photo-frame--portrait">
+        <img class="memory__photo" src="assets/photos/dingjintian.jpg" alt="丁金天" loading="eager">
+      </div>
+
+      <p class="memory__text">
+        <span class="dash"></span>
+        天哥挥笔生花问桀骜也敢与月争高！
+        <span class="dash"></span>
+      </p>
+    </section>
+
+    <!-- 结尾 -->
+    <section class="ending">
+      <p class="ending__from calligraphy">康辉赠</p>
+      <p class="ending__date">2026.08</p>
+    </section>
+
+  </div>
+
+  <!-- 音乐按钮 -->
+  <button class="music-btn" aria-label="播放音乐" title="播放音乐">
+    <span>♫</span>
+  </button>
+
+  <!-- 返回首页 -->
+  <a href="index.html" class="home-link">首 页</a>
+
+  <!-- 背景音乐 -->
+  <audio id="bgm" src="assets/audio/bgm.mp3" loop preload="auto"></audio>
+
+  <script src="assets/data.js?v=10"></script>
+  <script src="assets/main.js?v=11"></script>
+
+</body>
+</html>

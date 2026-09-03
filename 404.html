@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#0a0a0a">
+  <title>页面走丢了 · 毕业留念</title>
+  <meta name="description" content="此页不存在，返回首页。">
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <link rel="stylesheet" href="assets/style.css?v=11">
+  <style>
+    .nf {
+      position: relative;
+      z-index: 2;
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1.5rem;
+      text-align: center;
+    }
+
+    .nf__crest {
+      width: 120px;
+      height: 120px;
+      margin-bottom: 2rem;
+      padding: 6px;
+      border-radius: 50%;
+      border: 1.5px solid var(--line-gold-strong);
+      background: rgba(8, 8, 8, 0.5);
+      box-shadow: 0 0 40px rgba(212, 175, 55, 0.22), inset 0 0 18px rgba(0, 0, 0, 0.4);
+      overflow: hidden;
+      opacity: 0;
+      animation: nfFadeUp 1s ease 0.2s forwards;
+    }
+
+    .nf__crest img {
+      width: calc(100% + 12px);
+      height: calc(100% + 12px);
+      margin: -6px;
+      object-fit: cover;
+      border-radius: 50%;
+      display: block;
+    }
+
+    .nf__code {
+      font-family: var(--font-serif);
+      font-size: clamp(4.5rem, 18vw, 8rem);
+      line-height: 1;
+      letter-spacing: 0.1em;
+      background: var(--gold-gradient-text);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 60px rgba(212, 175, 55, 0.25);
+      opacity: 0;
+      animation: nfFadeUp 1s ease 0.4s forwards;
+    }
+
+    .nf__msg {
+      margin-top: 1.2rem;
+      font-family: var(--font-calligraphy);
+      font-size: clamp(1.5rem, 5vw, 2.2rem);
+      letter-spacing: 0.2em;
+      color: var(--gold-200);
+      opacity: 0;
+      animation: nfFadeUp 1s ease 0.6s forwards;
+    }
+
+    .nf__sub {
+      margin-top: 0.8rem;
+      font-size: 0.85rem;
+      letter-spacing: 0.15em;
+      color: var(--text-dim);
+      opacity: 0;
+      animation: nfFadeUp 1s ease 0.8s forwards;
+    }
+
+    .nf__btn {
+      display: inline-block;
+      margin-top: 2.5rem;
+      padding: 0.8rem 2.4rem;
+      border: 1px solid var(--line-gold-strong);
+      border-radius: 2px;
+      background: linear-gradient(160deg, rgba(30, 26, 14, 0.9), rgba(12, 10, 6, 0.95));
+      color: var(--gold-100);
+      font-family: var(--font-serif);
+      font-size: 0.9rem;
+      letter-spacing: 0.3em;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      opacity: 0;
+      animation: nfFadeUp 1s ease 1s forwards;
+    }
+
+    .nf__btn:hover {
+      border-color: var(--gold-300);
+      box-shadow: 0 0 24px rgba(212, 175, 55, 0.3);
+      transform: translateY(-2px);
+    }
+
+    @keyframes nfFadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 回纹暗纹 -->
+  <div class="pattern-bg"></div>
+
+  <!-- 金色粒子背景 -->
+  <canvas id="gold-particles"></canvas>
+
+  <div class="nf">
+    <div class="nf__crest">
+      <img src="assets/crest.png" alt="河北地质大学校徽">
+    </div>
+    <div class="nf__code">404</div>
+    <p class="nf__msg">此页走丢了</p>
+    <p class="nf__sub">你触碰的链接可能已失效，或页面正在路上</p>
+    <a class="nf__btn" href="index.html">返 回 首 页</a>
+  </div>
+
+  <script src="assets/main.js?v=11"></script>
+
+</body>
+</html>

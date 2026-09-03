@@ -1,0 +1,802 @@
+/* ============================================================
+   《金兰同路》毕业纪念 · 共享设计系统
+   黑金为主 · 沉金工艺 · 克制科技点缀
+   ============================================================ */
+
+:root {
+  /* 沉金调色板 */
+  --gold-100: #F5E6B8;
+  --gold-200: #EAD18A;
+  --gold-300: #D4AF37;   /* 沉金主色 */
+  --gold-400: #B8941F;
+  --gold-500: #8A6E14;
+  --gold-600: #5E4B0E;
+
+  /* 哑黑调色板 */
+  --black-050: #1a1a1a;
+  --black-100: #141414;
+  --black-200: #0e0e0e;
+  --black-300: #080808;
+  --black-400: #040404;
+
+  /* 文字色 */
+  --text-gold: var(--gold-200);
+  --text-gold-dim: var(--gold-400);
+  --text-white: rgba(255, 253, 245, 0.92);
+  --text-dim: rgba(255, 253, 245, 0.55);
+  --text-faint: rgba(255, 253, 245, 0.28);
+
+  /* 边框 & 线 */
+  --line-gold: rgba(212, 175, 55, 0.35);
+  --line-gold-strong: rgba(212, 175, 55, 0.6);
+  --line-gold-soft: rgba(212, 175, 55, 0.15);
+
+  /* 书法字体栈（优先宋体类书法感） */
+  --font-calligraphy: "STKaiti", "KaiTi", "楷体", "Songti SC", "SimSun", "宋体", serif;
+  --font-serif: "Songti SC", "SimSun", "宋体", "STSong", serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+
+  /* 金色渐变 */
+  --gold-gradient: linear-gradient(135deg, #F5E6B8 0%, #D4AF37 40%, #B8941F 70%, #D4AF37 100%);
+  --gold-gradient-text: linear-gradient(180deg, #F9E8B0 0%, #D4AF37 50%, #A8821A 100%);
+}
+
+/* ---------- 基础重置 ---------- */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--black-300);
+  color: var(--text-white);
+  line-height: 1.7;
+  overflow-x: hidden;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* ---------- 金色文字 ---------- */
+.gold-text {
+  background: var(--gold-gradient-text);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* ---------- 金色分割线 ---------- */
+.gold-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, var(--gold-300) 20%, var(--gold-300) 80%, transparent 100%);
+  opacity: 0.6;
+  margin: 2rem auto;
+  width: 60%;
+}
+
+.gold-divider--short {
+  width: 80px;
+  margin: 1.2rem auto;
+}
+
+/* ---------- 书法标题 ---------- */
+.calligraphy {
+  font-family: var(--font-calligraphy);
+  font-weight: normal;
+  letter-spacing: 0.08em;
+}
+
+/* ---------- 回纹暗纹（呼应实体卡面） ---------- */
+.pattern-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image:
+    linear-gradient(30deg, var(--gold-300) 12%, transparent 12.5%, transparent 87%, var(--gold-300) 87.5%, var(--gold-300)),
+    linear-gradient(150deg, var(--gold-300) 12%, transparent 12.5%, transparent 87%, var(--gold-300) 87.5%, var(--gold-300)),
+    linear-gradient(30deg, var(--gold-300) 12%, transparent 12.5%, transparent 87%, var(--gold-300) 87.5%, var(--gold-300)),
+    linear-gradient(150deg, var(--gold-300) 12%, transparent 12.5%, transparent 87%, var(--gold-300) 87.5%, var(--gold-300)),
+    linear-gradient(60deg, rgba(212,175,55,0.5) 25%, transparent 25.5%, transparent 75%, rgba(212,175,55,0.5) 75%, rgba(212,175,55,0.5)),
+    linear-gradient(60deg, rgba(212,175,55,0.5) 25%, transparent 25.5%, transparent 75%, rgba(212,175,55,0.5) 75%, rgba(212,175,55,0.5));
+  background-size: 48px 84px;
+  background-position: 0 0, 0 0, 24px 42px, 24px 42px, 0 0, 24px 42px;
+}
+
+/* 背景叠加径向暗角，让中心更聚焦 */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.6) 100%);
+}
+
+/* ---------- 金色微粒背景 canvas ---------- */
+#gold-particles {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* ============================================================
+   封面层（NFC 碰一碰仪式感）
+   ============================================================ */
+.cover {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: radial-gradient(ellipse at center, var(--black-100) 0%, var(--black-400) 70%, #000 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  cursor: pointer;
+  transition: opacity 1.2s ease, visibility 1.2s ease;
+}
+
+.cover.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.cover__card {
+  position: relative;
+  width: 260px;
+  height: 168px;
+  border-radius: 12px;
+  border: 1px solid var(--line-gold-strong);
+  background: linear-gradient(145deg, rgba(20,20,20,0.9) 0%, rgba(8,8,8,0.95) 100%);
+  box-shadow:
+    0 0 60px rgba(212, 175, 55, 0.15),
+    inset 0 0 30px rgba(212, 175, 55, 0.05),
+    0 20px 60px rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 3rem;
+  animation: coverCardFloat 4s ease-in-out infinite;
+}
+
+@keyframes coverCardFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+.cover__nfc {
+  width: 60px;
+  height: 50px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cover__nfc-icon {
+  width: 24px;
+  height: 30px;
+  border: 2px solid var(--gold-300);
+  border-radius: 3px;
+  position: relative;
+}
+
+.cover__nfc-icon::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 10px;
+  height: 16px;
+  border: 1.5px solid var(--gold-300);
+  border-radius: 2px;
+}
+
+/* NFC 波纹 */
+.cover__ripple {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 20px;
+  height: 20px;
+  border: 1.5px solid var(--gold-300);
+  border-radius: 50%;
+  opacity: 0;
+  animation: nfcRipple 2.4s ease-out infinite;
+}
+
+.cover__ripple:nth-child(2) { animation-delay: 0.8s; }
+.cover__ripple:nth-child(3) { animation-delay: 1.6s; }
+
+@keyframes nfcRipple {
+  0% {
+    width: 20px;
+    height: 20px;
+    opacity: 0.9;
+  }
+  100% {
+    width: 200px;
+    height: 200px;
+    opacity: 0;
+  }
+}
+
+.cover__name {
+  font-family: var(--font-calligraphy);
+  font-size: 2.4rem;
+  letter-spacing: 0.2em;
+  background: var(--gold-gradient-text);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 0.5rem;
+  opacity: 0;
+  animation: fadeInUp 1.2s ease 0.6s forwards;
+}
+
+.cover__hint {
+  font-size: 0.85rem;
+  color: var(--text-faint);
+  letter-spacing: 0.3em;
+  opacity: 0;
+  animation: fadeInUp 1s ease 1.2s forwards, pulseHint 2.5s ease-in-out 2.2s infinite;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulseHint {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.85; }
+}
+
+/* 封面爆开效果 */
+.cover__burst {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* ============================================================
+   主页面
+   ============================================================ */
+.main {
+  position: relative;
+  z-index: 2;
+  opacity: 0;
+  transition: opacity 1.2s ease 0.3s;
+}
+
+.main.visible {
+  opacity: 1;
+}
+
+/* ---------- Hero 区 ---------- */
+.hero {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1.5rem;
+  position: relative;
+  text-align: center;
+}
+
+/* 校徽 —— 金色圆环容器 */
+.hero__crest {
+  width: 200px;
+  height: 200px;
+  margin-bottom: 1.5rem;
+  padding: 7px;
+  border-radius: 50%;
+  border: 1.5px solid var(--line-gold-strong);
+  background: rgba(8, 8, 8, 0.5);
+  box-shadow:
+    0 0 40px rgba(212, 175, 55, 0.26),
+    0 0 90px rgba(212, 175, 55, 0.1),
+    inset 0 0 24px rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 1s ease;
+  overflow: hidden;
+}
+
+.main.visible .hero__crest {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 校徽本体：撑满光圈内缘（抵消 padding），透明边角被圆形裁掉 */
+.hero__crest img {
+  width: calc(100% + 14px);
+  height: calc(100% + 14px);
+  margin: -7px;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+}
+
+/* 院标 —— 浅金底铭牌，衬托黑色字迹 */
+.hero__college-logo {
+  width: 250px;
+  margin-bottom: 3rem;
+  padding: 12px 18px;
+  border-radius: 8px;
+  border: 1px solid var(--line-gold-strong);
+  background: linear-gradient(180deg, #FDF8EA 0%, #F1E4BE 60%, #E8D69F 100%);
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.5),
+    0 0 24px rgba(212, 175, 55, 0.2),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+  opacity: 0;
+  transform: translateY(16px);
+  transition: all 1s ease 0.2s;
+}
+
+.main.visible .hero__college-logo {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.hero__college-logo img {
+  width: 100%;
+  height: auto;
+  display: block;
+  filter: contrast(1.05);
+}
+
+.hero__name {
+  font-family: var(--font-calligraphy);
+  font-size: clamp(3rem, 12vw, 6rem);
+  font-weight: normal;
+  letter-spacing: 0.15em;
+  line-height: 1.2;
+  margin-bottom: 0.8rem;
+  background: var(--gold-gradient-text);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 60px rgba(212, 175, 55, 0.3);
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.4s;
+}
+
+.main.visible .hero__name {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* "To:" 前缀 —— 信封抬头感 */
+.hero__to {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.3em;
+  letter-spacing: 0.06em;
+  margin-right: 0.45em;
+  background: none;
+  -webkit-text-fill-color: var(--gold-400);
+  color: var(--gold-400);
+  opacity: 0.9;
+  vertical-align: middle;
+  font-weight: normal;
+}
+
+.hero__blessing {
+  font-family: var(--font-calligraphy);
+  font-size: clamp(2.4rem, 7.5vw, 4rem);
+  letter-spacing: 0.12em;
+  color: var(--gold-200);
+  margin-top: 1rem;
+  min-height: 2em;
+  text-shadow: 0 0 30px rgba(212, 175, 55, 0.25);
+}
+
+.hero__blessing .char {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* 标点窄化：不占全角宽度，保证整行视觉居中 */
+.hero__blessing .char--punct {
+  font-size: 0.55em;
+  margin: 0 -0.18em;
+  transform: translateY(0.25em);
+}
+
+.hero__blessing .char.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.hero__scroll {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 60;
+  color: var(--text-faint);
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  animation: scrollBounce 2s ease-in-out infinite;
+  transition: opacity 0.6s ease, visibility 0.6s ease;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: none;
+}
+
+.hero__scroll.is-hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.hero__scroll::after {
+  content: '';
+  display: block;
+  width: 1px;
+  height: 30px;
+  background: linear-gradient(to bottom, var(--gold-300), transparent);
+  margin: 0.5rem auto 0;
+}
+
+@keyframes scrollBounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); opacity: 0.5; }
+  50% { transform: translateX(-50%) translateY(8px); opacity: 0.9; }
+}
+
+/* ---------- 回忆区 ---------- */
+.memory {
+  padding: 4rem 1.5rem;
+  max-width: 920px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.memory__label {
+  text-align: center;
+  font-size: 0.7rem;
+  letter-spacing: 0.5em;
+  color: var(--text-gold-dim);
+  margin-bottom: 1rem;
+  font-family: var(--font-serif);
+}
+
+.memory__title {
+  text-align: center;
+  font-family: var(--font-calligraphy);
+  font-size: 1.8rem;
+  letter-spacing: 0.15em;
+  background: var(--gold-gradient-text);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 2.5rem;
+}
+
+/* 照片框：横/竖两种形态，随素材自动切换 */
+.memory__photo-frame {
+  position: relative;
+  width: 100%;
+  margin: 0 auto 2.5rem;
+  border: 1px solid var(--line-gold);
+  padding: 14px;
+  background: linear-gradient(145deg, rgba(24,22,18,0.9), rgba(10,9,7,0.95));
+  box-shadow:
+    0 30px 80px rgba(0, 0, 0, 0.7),
+    0 0 40px rgba(212, 175, 55, 0.08),
+    inset 0 0 30px rgba(0, 0, 0, 0.4);
+}
+
+.memory__photo-frame--portrait {
+  max-width: 680px;
+  aspect-ratio: 3 / 4;
+}
+
+.memory__photo-frame--landscape {
+  max-width: 920px;
+  aspect-ratio: 4 / 3;
+}
+
+/* 四角装饰 —— 传统相纸角标风格 */
+.memory__photo-frame::before,
+.memory__photo-frame::after {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border: 1.5px solid var(--gold-300);
+}
+
+.memory__photo-frame::before {
+  top: 4px;
+  left: 4px;
+  border-right: none;
+  border-bottom: none;
+}
+
+.memory__photo-frame::after {
+  bottom: 4px;
+  right: 4px;
+  border-left: none;
+  border-top: none;
+}
+
+.memory__photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  filter: sepia(0.1) contrast(1.05) saturate(0.95);
+}
+
+.memory__text {
+  text-align: center;
+  font-size: 1.05rem;
+  line-height: 2;
+  color: var(--text-white);
+  font-family: var(--font-serif);
+  letter-spacing: 0.05em;
+  padding: 0 1rem;
+}
+
+.memory__text .dash {
+  display: inline-block;
+  width: 30px;
+  height: 1px;
+  background: var(--gold-300);
+  vertical-align: middle;
+  margin: 0 0.8rem;
+  opacity: 0.6;
+}
+
+/* ---------- 四年同行 ---------- */
+.timeline {
+  padding: 4rem 1.5rem;
+  max-width: 600px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.timeline__label {
+  text-align: center;
+  font-size: 0.7rem;
+  letter-spacing: 0.5em;
+  color: var(--text-gold-dim);
+  margin-bottom: 1rem;
+  font-family: var(--font-serif);
+}
+
+.timeline__title {
+  text-align: center;
+  font-family: var(--font-calligraphy);
+  font-size: 1.6rem;
+  letter-spacing: 0.15em;
+  background: var(--gold-gradient-text);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 3rem;
+}
+
+.timeline__track {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 62%;
+  margin: 0 auto;
+}
+
+/* 线段容器：圆点顶到两端，线在中间穿过 */
+.timeline__dots {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1;
+  margin: 0 1.1rem;
+}
+
+.timeline__dots::before {
+  content: '';
+  position: absolute;
+  left: 5px;
+  right: 5px;
+  top: 50%;
+  height: 2px;
+  transform: translateY(-50%);
+  background: linear-gradient(90deg, var(--gold-300), var(--gold-300));
+}
+
+.timeline__dot {
+  position: relative;
+  z-index: 2;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--gold-300);
+  box-shadow: 0 0 10px var(--gold-300);
+}
+
+.timeline__year {
+  position: relative;
+  z-index: 2;
+  padding: 0.3rem 0.5rem;
+  white-space: nowrap;
+  font-family: var(--font-serif);
+  font-size: 0.9rem;
+  color: var(--text-gold-dim);
+  letter-spacing: 0.1em;
+}
+
+/* ---------- 结尾 ---------- */
+.ending {
+  padding: 5rem 1.5rem 6rem;
+  text-align: center;
+  position: relative;
+}
+
+.ending__from {
+  font-family: var(--font-calligraphy);
+  font-size: 1.3rem;
+  color: var(--gold-200);
+  letter-spacing: 0.25em;
+  writing-mode: vertical-rl;
+  margin: 0 auto;
+  padding: 1.2rem 0.6rem;
+  border-left: 1px solid var(--line-gold);
+  border-right: 1px solid var(--line-gold);
+}
+
+.ending__date {
+  margin-top: 2.2rem;
+  font-family: var(--font-serif);
+  font-size: 0.8rem;
+  letter-spacing: 0.35em;
+  color: var(--text-gold-dim);
+}
+
+.ending__date::before,
+.ending__date::after {
+  content: '';
+  display: inline-block;
+  width: 20px;
+  height: 1px;
+  background: var(--line-gold);
+  vertical-align: middle;
+  margin: 0 0.8rem;
+}
+
+/* ---------- 音乐按钮 ---------- */
+.music-btn {
+  position: fixed;
+  top: 1.5rem;
+  right: 1.5rem;
+  z-index: 50;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--line-gold);
+  background: rgba(8, 8, 8, 0.6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: var(--gold-300);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  opacity: 0;
+}
+
+.music-btn.visible {
+  opacity: 1;
+}
+
+.music-btn:hover {
+  border-color: var(--gold-300);
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+}
+
+.music-btn.playing {
+  animation: musicPulse 2s ease-in-out infinite;
+}
+
+@keyframes musicPulse {
+  0%, 100% { box-shadow: 0 0 10px rgba(212, 175, 55, 0.2); }
+  50% { box-shadow: 0 0 20px rgba(212, 175, 55, 0.4); }
+}
+
+/* ---------- 返回顶部 / 总入口 ---------- */
+.home-link {
+  position: fixed;
+  top: 1.5rem;
+  left: 1.5rem;
+  z-index: 50;
+  padding: 0.5rem 1rem;
+  border-radius: 2px;
+  border: 1px solid var(--line-gold-soft);
+  background: rgba(8, 8, 8, 0.6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: var(--text-gold-dim);
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-decoration: none;
+  font-family: var(--font-serif);
+  transition: all 0.3s ease;
+  opacity: 0;
+}
+
+.home-link.visible {
+  opacity: 1;
+}
+
+.home-link:hover {
+  color: var(--gold-200);
+  border-color: var(--gold-300);
+}
+
+/* ---------- 响应式 ---------- */
+@media (max-width: 600px) {
+  .hero {
+    padding: 1.5rem 1rem;
+  }
+
+  .hero__crest {
+    width: 134px;
+    height: 134px;
+  }
+
+  .hero__college-logo {
+    width: 210px;
+    padding: 10px 14px;
+  }
+
+  .hero__blessing {
+    font-size: clamp(1.7rem, 6.5vw, 2.2rem);
+  }
+
+  .memory {
+    padding: 3rem 1rem;
+  }
+
+  .memory__photo-frame {
+    padding: 8px;
+  }
+
+  .timeline {
+    padding: 3rem 1rem;
+  }
+
+  .ending {
+    padding: 3rem 1rem 4rem;
+  }
+}
+
+/* ---------- 减少动效偏好 ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
