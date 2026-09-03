@@ -111,22 +111,10 @@
         window.__startBlessingReveal();
       }
 
-      // 尝试播放音乐（需用户交互后）
+      // 尝试播放音乐（需用户交互后，智能缓冲避免卡顿）
       const music = document.getElementById('bgm');
       const musicBtn = document.querySelector('.music-btn');
-      if (music) {
-        music.volume = 0.5;
-        const playPromise = music.play();
-        if (playPromise) {
-          playPromise
-            .then(() => {
-              if (musicBtn) musicBtn.classList.add('playing');
-            })
-            .catch(() => {
-              // 被阻止也没关系，用户可以手动点音乐按钮
-            });
-        }
-      }
+      smartPlay(music, musicBtn);
     }
 
     // 点击封面任意处开启
@@ -232,6 +220,45 @@
     };
   }
 
+  // ---------- 智能播放：优先缓存充分再播，避免边下边播卡顿 ----------
+  // 音频文件较大（网页通道又不稳定），边下边播容易卡顿。
+  // 这里等浏览器说“可以流畅播完”（canplaythrough）或已缓存完整时长再开播，
+  // 兜底 20 秒内若已有缓冲则先开播，避免永久静默。
+  function smartPlay(music, btn) {
+    if (!music) return;
+    music.volume = 0.5;
+
+    const start = function () {
+      const p = music.play();
+      if (p && typeof p.catch === 'function') p.catch(function () {});
+      if (btn) btn.classList.add('playing');
+    };
+
+    const ready = function () {
+      if (music.readyState >= 3) return true;
+      if (music.buffered.length && music.duration && isFinite(music.duration)) {
+        return music.buffered.end(music.buffered.length - 1) >= music.duration - 1;
+      }
+      return false;
+    };
+
+    if (ready()) { start(); return; }
+
+    let done = false;
+    let fallbackTimer = null;
+    const go = function () {
+      if (done) return;
+      done = true;
+      music.removeEventListener('canplaythrough', go);
+      if (fallbackTimer) clearTimeout(fallbackTimer);
+      start();
+    };
+    music.addEventListener('canplaythrough', go);
+    fallbackTimer = setTimeout(function () {
+      go();
+    }, 20000);
+  }
+
   // ---------- 音乐按钮 ----------
   function initMusicButton() {
     const music = document.getElementById('bgm');
@@ -243,8 +270,7 @@
     btn.addEventListener('click', function (e) {
       e.stopPropagation();
       if (music.paused) {
-        music.play();
-        btn.classList.add('playing');
+        smartPlay(music, btn);
       } else {
         music.pause();
         btn.classList.remove('playing');
@@ -321,11 +347,7 @@
     if (!music) return;
 
     function tryPlay() {
-      music.volume = 0.5;
-      music.play().then(() => {
-        const btn = document.querySelector('.music-btn');
-        if (btn) btn.classList.add('playing');
-      }).catch(() => {});
+      smartPlay(music, document.querySelector('.music-btn'));
     }
 
     tryPlay();
@@ -347,6 +369,14 @@
     initScrollReveal();
     initHomeLink();
     initScrollHint();
+
+    // 提前预载音频：让大文件在封面停留期间就开始缓冲，减少开播卡顿
+    const preloadMusic = document.getElementById('bgm');
+    if (preloadMusic) {
+      preloadMusic.preload = 'auto';
+      try { preloadMusic.load(); } catch (e) {}
+    }
+
     initAutoPlayForHome();
 
     initCover(() => {
